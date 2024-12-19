@@ -33,14 +33,17 @@
     </thead>
     <tbody>
       <% @books.each do |book| %>
-        <tr>
-          <%= render book %>
-          <td>
-            <%= link_to "Show this book", book %>
-          </td>
-        </tr>
+        <% if current_user.admin? || book.user == current_user %>
+          <tr>
+            <%= render book %>
+            <td>
+              <%= link_to "Show this book", book %>
+            </td>
+          </tr>
+        <% end %>
       <% end %>
     </tbody>
   </table>
 </div>
 <% end %>
+
