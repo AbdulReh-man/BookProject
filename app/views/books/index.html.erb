@@ -1,0 +1,46 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Books" %>
+
+<%# Add new book %>
+<h1>Add New Book</h1>
+<%= link_to "New book", new_book_path %>
+
+<%# Search by Name %>
+<h1>Search by Name</h1>
+<%= form_with url: search_books_path, method: :get, local: true do |form| %>
+  <%= form.label :name, "Search by Book Name" %>
+  <%= form.text_field :name %>
+  <%= form.submit "Search" %>
+<% end %>
+
+<%# Show books %>
+<h1>All Books</h1>
+
+<%# Check if empty %>
+<% if @books.empty? %>
+  <tr>
+    <td colspan="4">No books found</td>
+  </tr>
+<% else %>
+<div id="books">
+  <table>
+    <thead>
+      <td>Name</td>
+      <td>Author</td>
+      <td>Price</td>
+      <td>Published at</td>
+    </thead>
+    <tbody>
+      <% @books.each do |book| %>
+        <tr>
+          <%= render book %>
+          <td>
+            <%= link_to "Show this book", book %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<% end %>
