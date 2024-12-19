@@ -1,9 +1,15 @@
 class BooksController < ApplicationController
   before_action :set_book, only: %i[ show edit update destroy ]
-
+  before_action :authenticate_user!
+  load_and_authorize_resource
   # GET /books or /books.json
   def index
+     if current_user.admin?
     @books = Book.all
+  else
+    @books = current_user.books
+  end
+  render :index
   end
 
   # GET /books/1 or /books/1.json
@@ -21,8 +27,7 @@ class BooksController < ApplicationController
 
   # POST /books or /books.json
   def create
-    @book = Book.new(book_params)
-
+  @book = current_user.books.new(book_params)
     respond_to do |format|
       if @book.save
         format.html { redirect_to @book, notice: "Book was successfully created." }
@@ -59,7 +64,11 @@ class BooksController < ApplicationController
 
   # filter by book name
   def search
-    @books = Book.where("name LIKE ?", "%#{params[:name]}%")
+     if current_user.admin?
+      @books = Book.where("name LIKE ?", "%#{params[:name]}%")
+    else
+      @books = current_user.books.where("name LIKE ?", "%#{params[:name]}%")
+    end
     render :index
   end
 
@@ -73,4 +82,5 @@ class BooksController < ApplicationController
     def book_params
       params.expect(book: [ :name, :author, :edition, :price ])
     end
+
 end
