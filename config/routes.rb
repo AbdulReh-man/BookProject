@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  root "books#index"
+  devise_for :users
+  root "books#index"  
+  resources :users, only: [:show, :edit, :update] 
+  resources :accounts
   resources :books do
     collection do 
       get :search
